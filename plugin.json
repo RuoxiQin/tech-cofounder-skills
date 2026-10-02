@@ -1,0 +1,9 @@
+{
+  "name": "tech-cofounder",
+  "version": "0.1.0",
+  "description": "Skills for vibecoding and hosting applications on tech-cofounder",
+  "skills": [
+    "skills/vibecoding",
+    "skills/tech-cofounder"
+  ]
+}
