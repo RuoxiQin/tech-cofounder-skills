@@ -44,7 +44,7 @@ If unauthenticated:
    ```bash
    tc login --token "<USER_PROVIDED_TOKEN>"
    ```
-   *(Optionally, `TC_TOKEN` environment variable can be used for session-scoped execution).*
+   *(The CLI connects to the production platform by default. Custom endpoints can be passed via `--api-url <URL>` or `TC_API_URL`, or `TC_TOKEN` can be used for session-scoped execution).*
 
 ---
 
