@@ -5,7 +5,7 @@ description: Guide for LLM coding agents to interact with the tech-cofounder pla
 
 # Tech-Cofounder Platform Skill
 
-The `tc` CLI provides command-line access to the **tech-cofounder** hosting platform. It allows agents to register applications, provision private GitHub repositories, obtain short-lived scoped credentials, and deploy applications without requiring personal GitHub or cloud accounts.
+The `tc` CLI provides command-line access to the **tech-cofounder** hosting platform. It currently allows agents to register applications, provision private GitHub repositories, and obtain short-lived scoped credentials without requiring personal GitHub or cloud accounts. Deployment commands are not available yet.
 
 ---
 
@@ -34,7 +34,7 @@ tc whoami --json
 ```
 
 - **If authenticated:** Returns JSON containing `{ "client_id": "...", "auth_mechanism": "..." }`.
-- **If unauthenticated / token expired:** The command exits with error code `2` (`UNAUTHENTICATED`).
+- **If unauthenticated / token expired:** The command exits with code `3` (authentication failure).
 
 ### Handling Authentication
 If unauthenticated:
@@ -69,20 +69,9 @@ When starting or onboarding a new project:
    ```
    *(Note: This automatically provisions a dedicated **private GitHub repository** under the platform organization. The code remains private and secure by default).*
    
-   *Response schema:*
-   ```json
-   {
-     "id": "my-web-app",
-     "name": "My Web App",
-     "status": "PROVISIONING",
-     "repository": {
-       "status": "ready",
-       "owner": "tech-cofounder",
-       "name": "my-client--my-web-app",
-       "id": 123456789
-     }
-   }
-   ```
+   The response identifies the app with `app_id` and includes `repository.status`,
+   `repository.full_name`, and `repository.repository_id`. Wait for `status: "ready"`
+   before requesting repository credentials.
 
 2. **Retrieve Scoped GitHub Credentials:**
    ```bash
@@ -92,9 +81,9 @@ When starting or onboarding a new project:
    ```json
    {
      "clone_url": "https://github.com/tech-cofounder/my-client--my-web-app.git",
-     "username": "x-access-token",
-     "token": "ghs_xxxxxxxxxxxxxxxxxxxx",
-     "expires_at": "2026-10-02T16:06:14Z"
+     "git_username": "tech-cofounder-x-access-token",
+     "access_token": "ghs_xxxxxxxxxxxxxxxxxxxx",
+     "expires_at": "<RFC 3339 timestamp>"
    }
    ```
 
@@ -106,13 +95,14 @@ When starting or onboarding a new project:
    git add .
    git commit -m "feat: initial project scaffolding"
 
-   # Configure authenticated remote URL using the scoped token
-   # Format: https://x-access-token:<TOKEN>@github.com/<OWNER>/<REPO>.git
-   AUTH_REMOTE_URL="https://x-access-token:${TOKEN}@github.com/${REPO_OWNER}/${REPO_NAME}.git"
-   
-   git remote add origin "${AUTH_REMOTE_URL}" || git remote set-url origin "${AUTH_REMOTE_URL}"
-   git push -u origin main
+   # Use the unmodified clone_url returned by tc.
+   git remote add origin "<clone_url>"
+   git -c credential.helper= push -u origin main
    ```
+   When Git prompts, supply `git_username` as the username and `access_token` as the
+   password. An agent without an interactive terminal may use a temporary `GIT_ASKPASS`
+   helper that reads the token from memory. Never put the token in the remote URL,
+   command arguments, Git config, logs, or a persistent credential helper.
 
 ---
 
@@ -122,11 +112,8 @@ GitHub installation tokens issued by the platform are short-lived and expire aft
 
 When an agent pushes code and receives a Git authentication error (e.g. `HTTP 401 Unauthorized` or `Authentication failed`):
 1. Call `tc apps repository-credentials <APP_ID> --json` to obtain a fresh token.
-2. Update the Git remote URL with the new token:
-   ```bash
-   git remote set-url origin "https://x-access-token:${NEW_TOKEN}@github.com/${REPO_OWNER}/${REPO_NAME}.git"
-   ```
-3. Retry the `git push`.
+2. Keep the remote at the plain `clone_url`. Retry the push with the new
+   `git_username` and `access_token` as temporary Git credentials.
 
 ---
 
