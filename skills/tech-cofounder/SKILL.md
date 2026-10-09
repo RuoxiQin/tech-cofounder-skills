@@ -140,7 +140,7 @@ When an agent pushes code and receives a Git authentication error (e.g. `HTTP 40
 
 ### Journey 3: Deleting an Application (Safety Guardrail)
 
-> ⚠️ **CRITICAL WARNING:** Deleting an application permanently deletes the app registration **and destroys the private GitHub repository and all commit history**.
+> ⚠️ **CRITICAL WARNING:** Deleting an application retires its GCP project, unlinks billing, and deletes the app registration **and the private GitHub repository and all commit history**. Local files are preserved.
 
 #### Deletion Policy for Agents:
 1. **Never delete an app autonomously.**
