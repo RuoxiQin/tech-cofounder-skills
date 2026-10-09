@@ -5,7 +5,7 @@ description: Guide for LLM coding agents to interact with the tech-cofounder pla
 
 # Tech-Cofounder Platform Skill
 
-The `tc` CLI provides command-line access to the **tech-cofounder** hosting platform. It currently allows agents to register applications, provision private GitHub repositories, and obtain short-lived scoped credentials without requiring personal GitHub or cloud accounts. Deployment commands are not available yet.
+The `tc` CLI provides command-line access to the **tech-cofounder** hosting platform. It currently allows agents to register applications, provision private GitHub repositories, and obtain short-lived scoped credentials without requiring personal GitHub or cloud accounts. It can validate app Terraform and deploy a pushed commit to Cloud Run.
 
 ---
 
@@ -71,7 +71,11 @@ When starting or onboarding a new project:
    
    The response identifies the app with `app_id` and includes `repository.status`,
    `repository.full_name`, and `repository.repository_id`. Wait for `status: "ready"`
-   before requesting repository credentials.
+   before deploying. Poll `tc apps get my-web-app --json` for provisioning status.
+   If initialization fails, inspect `provisioning_error` and run
+   `tc apps create my-web-app --fix --json`. This repairs the existing project and
+   repository without changing their identities. Do not delete and recreate an app
+   to recover interrupted provisioning.
 
 2. **Retrieve Scoped GitHub Credentials:**
    ```bash
@@ -105,6 +109,23 @@ When starting or onboarding a new project:
    command arguments, Git config, logs, or a persistent credential helper.
 
 ---
+
+### Deploy a Pushed Commit
+
+The app must include a Dockerfile and policy-compliant Terraform under
+`infra/terraform`. Run `tc validate --help` for the local configuration arguments.
+Deploy the exact pushed commit:
+
+```bash
+tc deploy my-web-app "$(git rev-parse HEAD)" --json
+tc apps get my-web-app --json
+```
+
+Deployment polls for up to twenty minutes. If the CLI times out, inspect the run
+status before retrying; the worker may still be active. A successful deployment
+populates the app's `url`. Use a public `/health` route for HTTP checks; Cloud Run's
+internal `/healthz` startup probe can behave differently through Google Frontend.
+If the installed CLI lacks these commands or `--fix`, rerun the official installer.
 
 ### Journey 2: Handling Token Expiration (1-Hour Lifespan)
 
