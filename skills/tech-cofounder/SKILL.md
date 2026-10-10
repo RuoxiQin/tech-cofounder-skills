@@ -11,15 +11,16 @@ The `tc` CLI provides command-line access to the **tech-cofounder** hosting plat
 
 ## 1. CLI Installation
 
-Before running `tc` commands, verify if the CLI is installed. If `tc` is not found, install it via the official installer:
+Use CLI **v0.1.5 or newer** for the app creation workflow below. Check the active
+executable with `command -v tc`; for installer-managed binaries, the symlink target
+contains the release version (`readlink "$(command -v tc)"`). The presence of
+`--fix` alone does not establish that the CLI supports waiting for provisioning.
+If the CLI is missing, older, or its version is unknown, install or upgrade it via
+the official installer:
 
 ```bash
-# Verify if tc is installed
-which tc || {
-    echo "Installing tech-cofounder CLI..."
-    curl -fsSL https://raw.githubusercontent.com/RuoxiQin/tech-cofounder-cli/main/install.sh | bash
-    export PATH="$HOME/.local/bin:$PATH"
-}
+curl -fsSL https://raw.githubusercontent.com/RuoxiQin/tech-cofounder-cli/main/install.sh | bash
+export PATH="$HOME/.local/bin:$PATH"
 ```
 
 ---
@@ -69,13 +70,35 @@ When starting or onboarding a new project:
    ```
    *(Note: This automatically provisions a dedicated **private GitHub repository** under the platform organization. The code remains private and secure by default).*
    
+   The backend records the app before submitting a Cloud Run provisioning job.
+   The CLI polls every ten seconds for up to thirty minutes and succeeds when
+   `status` is `"ready"`; provisioning failure returns a nonzero exit code.
    The response identifies the app with `app_id` and includes `repository.status`,
-   `repository.full_name`, and `repository.repository_id`. Wait for `status: "ready"`
-   before deploying. Poll `tc apps get my-web-app --json` for provisioning status.
-   If initialization fails, inspect `provisioning_error` and run
-   `tc apps create my-web-app --fix --json`. This repairs the existing project and
-   repository without changing their identities. Do not delete and recreate an app
-   to recover interrupted provisioning.
+   `repository.full_name`, and `repository.repository_id`. Wait for the app to be
+   ready before retrieving credentials or deploying.
+
+   Inspect progress or diagnose failure with:
+   ```bash
+   tc apps get my-web-app --json
+   ```
+   Check `provisioning_error`, individual `provisioning.steps` entries (status,
+   error, and resource identifiers), and `provisioning.dispatch` (latest submission
+   status and error). Dispatch status `dispatched` means the job was accepted,
+   not completed. These checkpoints are not a heartbeat or run history and cannot
+   reliably distinguish a running job from one that died.
+
+   Choose the retry based on the problem:
+
+   - **Initial creation:** provisions all required resources.
+   - **Resume:** repeat `tc apps create "My Web App" --json` to retry failed or
+     unfinished steps while skipping checkpoints already marked `succeeded`.
+   - **Hard repair:** use `tc apps create "My Web App" --fix --json` to recheck
+     every step, including previously succeeded operations. This repairs the
+     existing project and repository without changing their identities.
+
+   A CLI timeout does not stop the worker. Inspect the app before retrying;
+   avoid blindly looping creation or `--fix` while a job may still be running.
+   Do not delete and recreate an app to recover interrupted provisioning.
 
 2. **Retrieve Scoped GitHub Credentials:**
    ```bash
@@ -125,7 +148,7 @@ Deployment polls for up to twenty minutes. If the CLI times out, inspect the run
 status before retrying; the worker may still be active. A successful deployment
 populates the app's `url`. Use a public `/health` route for HTTP checks; Cloud Run's
 internal `/healthz` startup probe can behave differently through Google Frontend.
-If the installed CLI lacks these commands or `--fix`, rerun the official installer.
+Use the minimum CLI version specified in the installation section above.
 
 ### Journey 2: Handling Token Expiration (1-Hour Lifespan)
 
