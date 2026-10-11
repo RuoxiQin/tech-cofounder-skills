@@ -9,19 +9,19 @@ The `tc` CLI provides command-line access to the **tech-cofounder** hosting plat
 
 ---
 
-## 1. CLI Installation
+## 1. CLI Installation & Updates
 
-Use CLI **v0.1.5 or newer** for the app creation workflow below. Check the active
-executable with `command -v tc`; for installer-managed binaries, the symlink target
-contains the release version (`readlink "$(command -v tc)"`). The presence of
-`--fix` alone does not establish that the CLI supports waiting for provisioning.
-If the CLI is missing, older, or its version is unknown, install or upgrade it via
-the official installer:
+**Always ensure you are running the latest `tc` CLI release.** Platform APIs and features evolve continuously; using an outdated CLI binary can result in missing commands or unsupported workflows.
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/RuoxiQin/tech-cofounder-cli/main/install.sh | bash
-export PATH="$HOME/.local/bin:$PATH"
-```
+Before executing platform commands:
+1. Verify `tc` is available on your PATH: `command -v tc`.
+2. Inspect the currently installed version (for installer-managed binaries, check `readlink "$(command -v tc)"` or run `tc --help`).
+3. If `tc` is not installed or when new capabilities are added, update to the latest release using the official installer:
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/RuoxiQin/tech-cofounder-cli/main/install.sh | bash
+   export PATH="$HOME/.local/bin:$PATH"
+   ```
+   *(The installer automatically queries GitHub Releases for the latest release and installs it to `~/.local/bin/tc`).*
 
 ---
 
@@ -182,7 +182,7 @@ Deployment polls for up to twenty minutes. If the CLI times out, inspect the run
 status before retrying; the worker may still be active. A successful deployment
 populates the app's `url`. Use a public `/health` route for HTTP checks; Cloud Run's
 internal `/healthz` startup probe can behave differently through Google Frontend.
-Use the minimum CLI version specified in the installation section above.
+Ensure you are running the latest CLI version as described in §1.
 
 ### Journey 2: Handling Token Expiration (1-Hour Lifespan)
 
@@ -207,3 +207,58 @@ When an agent pushes code and receives a Git authentication error (e.g. `HTTP 40
    ```bash
    tc apps delete <APP_ID> --json
    ```
+
+---
+
+### Journey 4: GCP Debugging & Secret Management
+
+When debugging Cloud Run services, viewing Cloud Build logs, inspecting Firestore/GCS data, or managing application secrets:
+
+1. **Retrieve Scoped GCP Credentials:**
+   ```bash
+   tc apps gcp-credentials <APP_ID> --json
+   ```
+   *Response schema:*
+   ```json
+   {
+     "access_token": "ya29.xxxxxxxxxxxxxxxxxxxx",
+     "expires_at": "<RFC 3339 timestamp>",
+     "gcp_project": "tc-my-web-app-123456",
+     "service_account_email": "client-safe-operator@tc-my-web-app-123456.iam.gserviceaccount.com"
+   }
+   ```
+
+2. **Configure Environment for Google Cloud SDK (`gcloud`):**
+   ```bash
+   GCP_CREDS=$(tc apps gcp-credentials <APP_ID> --json)
+   export CLOUDSDK_AUTH_ACCESS_TOKEN=$(echo "$GCP_CREDS" | jq -r '.access_token')
+   export CLOUDSDK_CORE_PROJECT=$(echo "$GCP_CREDS" | jq -r '.gcp_project')
+   ```
+
+3. **Available Permissions & Operations:**
+   The `client-safe-operator` service account provides:
+   - **Full Read Access:** Inspect Cloud Run services, revisions, metrics, Cloud Build logs, Cloud Logging log entries, GCS bucket objects, and Firestore documents.
+     ```bash
+     # View Cloud Run service status
+     gcloud run services describe <SERVICE_NAME> --region <REGION>
+
+     # Read application or build logs
+     gcloud logging read 'resource.type="cloud_run_revision"' --limit 50
+
+     # Inspect Cloud Build logs
+     gcloud builds list --limit 5
+     gcloud builds log <BUILD_ID>
+     ```
+   - **Secret Manager Administration:** Full CRUD permissions (`roles/secretmanager.admin`) to create, update, read, and delete application secrets and secret versions.
+     ```bash
+     # Create a new secret
+     gcloud secrets create API_KEY --data-file=- <<< "my-secret-value"
+
+     # Add a new version to an existing secret
+     gcloud secrets versions add API_KEY --data-file=- <<< "new-secret-value"
+
+     # Read secret payload
+     gcloud secrets versions access latest --secret API_KEY
+     ```
+   *(Note: The token expires in 1 hour; call `tc apps gcp-credentials` again if you receive an authentication error).*
+
