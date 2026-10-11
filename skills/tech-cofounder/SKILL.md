@@ -237,7 +237,7 @@ When debugging Cloud Run services, viewing Cloud Build logs, inspecting Firestor
 
 3. **Available Permissions & Operations:**
    The `client-safe-operator` service account provides:
-   - **Full Read Access:** Inspect Cloud Run services, revisions, metrics, Cloud Build logs, Cloud Logging log entries, GCS bucket objects, and Firestore documents.
+   - **Observability & Inspection:** Inspect Cloud Run services, revisions, metrics, Cloud Build logs, Cloud Logging log entries, and Firestore documents (`roles/viewer`, `roles/datastore.viewer`).
      ```bash
      # View Cloud Run service status
      gcloud run services describe <SERVICE_NAME> --region <REGION>
@@ -248,6 +248,15 @@ When debugging Cloud Run services, viewing Cloud Build logs, inspecting Firestor
      # Inspect Cloud Build logs
      gcloud builds list --limit 5
      gcloud builds log <BUILD_ID>
+     ```
+   - **Cloud Storage Object Management:** Full CRUD permissions (`roles/storage.objectUser`) to list, upload, read, update, and delete objects in GCS buckets for data backfills and assets:
+     ```bash
+     # Upload or backfill data to a bucket
+     gcloud storage cp ./data.json gs://<BUCKET_NAME>/data.json
+     gcloud storage cp -r ./backfill/ gs://<BUCKET_NAME>/backfill/
+
+     # List and inspect objects
+     gcloud storage ls gs://<BUCKET_NAME>/
      ```
    - **Secret Manager Administration:** Full CRUD permissions (`roles/secretmanager.admin`) to create, update, read, and delete application secrets and secret versions.
      ```bash
