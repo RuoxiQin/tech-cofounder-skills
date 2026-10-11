@@ -17,6 +17,8 @@ Comprehensive technical guide for agents to interact with the platform via the `
 - Minting scoped 1-hour GitHub tokens (`tc apps repository-credentials`)
 - Refreshing expired tokens
 - Safe deletion procedures with explicit confirmation
+- Repository manifest, recommended `web_app/` layout, Terraform validation, and
+  deployment of a bundled backend/frontend to one Cloud Run service
 
 ---
 

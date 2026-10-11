@@ -135,7 +135,50 @@ When starting or onboarding a new project:
 
 ### Deploy a Pushed Commit
 
-The app repository must include a `Dockerfile` and policy-compliant Terraform configuration under `infra/terraform`.
+The app repository must include a root `tech_cofounder_configs.json`. Recommended layout:
+
+```text
+tech_cofounder_configs.json
+web_app/
+  Dockerfile
+  <application source, package files, and .dockerignore>
+infra/terraform/
+  <Terraform configuration>
+ios_app/          # optional mobile source
+android_app/      # optional mobile source
+<other top-level files as needed>
+```
+
+Bundle the web backend and frontend into one container deployed as exactly one
+Cloud Run service. Do not configure separate backend/frontend images. Mobile
+directories are optional source organization; the platform does not build or
+release mobile apps. Apps without a web service can omit `web_app/`, but the
+current deployment command requires one web container and Terraform configuration.
+
+Commit this manifest alongside the source:
+
+```json
+{
+  "schema_version": 1,
+  "terraform": { "directory": "infra/terraform" },
+  "web_app": {
+    "dockerfile": "web_app/Dockerfile",
+    "build_context": "web_app"
+  }
+}
+```
+
+Directory names are recommendations; the manifest selects the actual paths.
+All paths are canonical POSIX paths relative to the repository root; absolute
+paths, `..`, and symlinks in local Terraform paths/files are unsupported. Use `"."`
+as `build_context` when the Dockerfile needs shared files outside `web_app/`, and
+place `.dockerignore` in that context. Dockerfile `COPY` paths are relative to the
+build context. Keep credentials and local environment files out of Git and Docker.
+Missing/invalid manifests fail; there is no fallback to conventional paths.
+Validation reads the local manifest; deployment reads the manifest and Terraform
+from the exact pushed commit and builds that same commit. Run repository commands
+such as `git` and `tc` from the repository root, and package-manager commands from
+`web_app/` (or the configured application's directory).
 
 #### Recommended Application Frameworks
 Recommend either:
@@ -147,7 +190,7 @@ Recommend either:
 - Include a startup probe endpoint at `/healthz` (returns HTTP 200).
 - Expose a public route for HTTP checks (e.g. `/health`).
 
-#### Terraform Contract (`infra/terraform`)
+#### Terraform Contract (configured directory; recommended `infra/terraform`)
 The platform worker injects these standard variables when evaluating and applying the plan:
 - `tc_project_id`: The app's dedicated GCP project ID.
 - `tc_region`: The deployment GCP region.

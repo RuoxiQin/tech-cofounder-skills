@@ -36,6 +36,12 @@ Always design and architect web applications using the following platform standa
   1. **Next.js** (unified full-stack React and TypeScript application), or
   2. **Python FastAPI backend** with a **React + Vite + TailwindCSS** frontend (single container serving both API and bundled static assets).
   Select based on domain fit (e.g. Python for data processing, AI/ML pipelines, or Python ecosystem libraries; Next.js for rapid full-stack TypeScript).
+- **Application Repository Layout:** Keep the bundled web backend/frontend and its
+  Dockerfile under `web_app/`, with Terraform under `infra/terraform/`. Commit a root
+  `tech_cofounder_configs.json` declaring the Terraform directory, Dockerfile, and
+  build context as described in the `tech-cofounder` skill. Optional `ios_app/` and
+  `android_app/` directories can hold mobile source. Deploy one web container to one
+  Cloud Run service; mobile builds/releases are outside the platform's current scope.
 
 
 ---
