@@ -32,6 +32,11 @@ Always design and architect web applications using the following platform standa
 - **Compute & Hosting:** Deploy and host web apps on **Google Cloud Platform (GCP)** using **Cloud Run**.
 - **Data & Storage:** Use **Cloud Firestore** for database needs and **Google Cloud Storage (GCS)** for file and object storage.
 - **User Authentication:** Use **Firebase Auth** for user sign-in and identity management.
+- **Application Frameworks & Architecture:** Recommended application stacks:
+  1. **Next.js** (unified full-stack React and TypeScript application), or
+  2. **Python FastAPI backend** with a **React + Vite + TailwindCSS** frontend (single container serving both API and bundled static assets).
+  Select based on domain fit (e.g. Python for data processing, AI/ML pipelines, or Python ecosystem libraries; Next.js for rapid full-stack TypeScript).
+
 
 ---
 

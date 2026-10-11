@@ -135,11 +135,45 @@ When starting or onboarding a new project:
 
 ### Deploy a Pushed Commit
 
-The app must include a Dockerfile and policy-compliant Terraform under
-`infra/terraform`. Run `tc validate --help` for the local configuration arguments.
-Deploy the exact pushed commit:
+The app repository must include a `Dockerfile` and policy-compliant Terraform configuration under `infra/terraform`.
 
+#### Recommended Application Frameworks
+Recommend either:
+- **Next.js** (unified full-stack React and TypeScript application)
+- **Python FastAPI backend** with a **React + Vite + TailwindCSS** frontend (containerized together to serve API and bundled frontend assets)
+
+#### Container Contract
+- Listen on HTTP port `8080`.
+- Include a startup probe endpoint at `/healthz` (returns HTTP 200).
+- Expose a public route for HTTP checks (e.g. `/health`).
+
+#### Terraform Contract (`infra/terraform`)
+The platform worker injects these standard variables when evaluating and applying the plan:
+- `tc_project_id`: The app's dedicated GCP project ID.
+- `tc_region`: The deployment GCP region.
+- `tc_app_id`: The immutable application ID.
+- `tc_runtime_service_account`: The runtime service account (`app-runner@<app-project>.iam.gserviceaccount.com`).
+- `tc_image_digest`: The published container image digest from Artifact Registry.
+
+Supported resources:
+- `google_cloud_run_v2_service` (required, exactly 1):
+  - Limits: up to 1 CPU, up to 4GB memory, up to 10 instances (`max_instance_count`).
+  - Runtime service account: `var.tc_runtime_service_account`.
+  - Ingress: `INGRESS_TRAFFIC_ALL`, `invoker_iam_disabled = true`.
+- `google_storage_bucket` and `google_storage_bucket_iam_member` (optional):
+  - Allowed roles: `roles/storage.objectUser`, `roles/storage.objectViewer`, `roles/storage.objectAdmin`.
+  - Member: `serviceAccount:${var.tc_runtime_service_account}`.
+- `google_secret_manager_secret` and `google_secret_manager_secret_iam_member` (optional):
+  - Allowed roles: `roles/secretmanager.secretAccessor`, `roles/secretmanager.viewer`.
+  - Member: `serviceAccount:${var.tc_runtime_service_account}`.
+  - Secret values are seeded out-of-band by the platform (do not define `google_secret_manager_secret_version` in Terraform).
+
+Validate and deploy:
 ```bash
+# Validate Terraform policy
+tc validate my-web-app --json
+
+# Deploy the exact pushed commit
 tc deploy my-web-app "$(git rev-parse HEAD)" --json
 tc apps get my-web-app --json
 ```
