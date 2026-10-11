@@ -42,6 +42,14 @@ Always design and architect web applications using the following platform standa
   build context as described in the `tech-cofounder` skill. Optional `ios_app/` and
   `android_app/` directories can hold mobile source. Deploy one web container to one
   Cloud Run service; mobile builds/releases are outside the platform's current scope.
+- **Shared Agent Instructions:** Recommend a root `AGENTS.md` with relative symlinks
+  `CLAUDE.md -> AGENTS.md` and `GEMINI.md -> AGENTS.md`. Keep shared architecture,
+  directory layout, and development/deployment commands in `AGENTS.md`; preserve
+  relevant existing instructions when consolidating files. Framework-specific
+  instructions may remain in nested `AGENTS.md` files. Include a notice that the
+  project is deployed and co-managed by tech-cofounder, referring future agents to
+  the `tech-cofounder` skill for directory structure, deployment requirements, and
+  best practices.
 
 
 ---

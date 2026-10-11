@@ -135,25 +135,76 @@ When starting or onboarding a new project:
 
 ### Deploy a Pushed Commit
 
-The app repository must include a root `tech_cofounder_configs.json`. Recommended layout:
+#### Architecture and Repository Layout
+
+Use one Git repository for the app, with its deployment manifest at the Git root.
+The deployment requirements are one `tech_cofounder_configs.json`, one Dockerfile
+building the bundled web backend/frontend, and one Terraform root module defining
+exactly one Cloud Run service. The directory names below are recommended; the
+manifest specifies the paths actually used by the platform.
+
+Example recommended directory structure (include mobile directories only when
+building the corresponding apps; web files below illustrate a Next.js app):
 
 ```text
-tech_cofounder_configs.json
-web_app/
-  Dockerfile
-  <application source, package files, and .dockerignore>
-infra/terraform/
-  <Terraform configuration>
-ios_app/          # optional mobile source
-android_app/      # optional mobile source
-<other top-level files as needed>
+my-app/
+├── AGENTS.md                    # shared repository instructions
+├── CLAUDE.md -> AGENTS.md
+├── GEMINI.md -> AGENTS.md
+├── tech_cofounder_configs.json
+├── .gitignore
+├── README.md
+├── ios_app/                     # optional iOS app project and source
+├── android_app/                 # optional Android app project and source
+├── web_app/                     # bundled web backend and frontend
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   ├── package.json
+│   ├── public/
+│   └── src/
+└── infra/
+    └── terraform/
+        ├── main.tf
+        └── variables.tf
 ```
 
 Bundle the web backend and frontend into one container deployed as exactly one
 Cloud Run service. Do not configure separate backend/frontend images. Mobile
 directories are optional source organization; the platform does not build or
-release mobile apps. Apps without a web service can omit `web_app/`, but the
-current deployment command requires one web container and Terraform configuration.
+release mobile apps. Create only the source directories the app needs. A mobile-only
+repository can omit `web_app/`, but cannot use the current deployment command
+without a web container and Terraform configuration.
+
+#### Shared Agent Instructions
+
+Recommend a top-level `AGENTS.md` as the shared source of repository instructions,
+with relative symlinks `CLAUDE.md -> AGENTS.md` and `GEMINI.md -> AGENTS.md`.
+Record the app's architecture, directory layout, development/build commands, and
+the root-level `tc validate` / `tc deploy` workflow there. Keep credentials out of
+these files. Framework-generated instructions can remain in a nested `AGENTS.md`
+(for example, `web_app/AGENTS.md`) alongside the framework's source and dependencies.
+
+Recommend including this notice in the root `AGENTS.md` so future agents know
+where to find the platform guidance:
+
+```markdown
+This project is deployed and co-managed by tech-cofounder. Refer to the
+`tech-cofounder` skill for the recommended directory structure, deployment
+requirements, and best practices before changing the architecture or deploying.
+```
+
+After writing the root `AGENTS.md`, create and commit the symlinks from the Git root:
+
+```bash
+ln -s AGENTS.md CLAUDE.md
+ln -s AGENTS.md GEMINI.md
+```
+
+For an existing repository, consolidate relevant instructions from existing
+`CLAUDE.md` and `GEMINI.md` into `AGENTS.md` before replacing them with symlinks.
+Maintain shared instructions in `AGENTS.md` rather than separate copies.
+
+#### Deployment Manifest
 
 Commit this manifest alongside the source:
 
@@ -168,7 +219,9 @@ Commit this manifest alongside the source:
 }
 ```
 
-Directory names are recommendations; the manifest selects the actual paths.
+All shown manifest fields are required for schema version 1; unknown fields and
+unsupported versions fail validation. Agent instruction files and symlinks are
+repository recommendations, not deployment prerequisites checked by the platform.
 All paths are canonical POSIX paths relative to the repository root; absolute
 paths, `..`, and symlinks in local Terraform paths/files are unsupported. Use `"."`
 as `build_context` when the Dockerfile needs shared files outside `web_app/`, and
