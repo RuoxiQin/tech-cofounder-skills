@@ -65,4 +65,4 @@ Version control is an autonomous responsibility of the agent, not something the 
 - **Rollback & Historical Reference:**
   - When the user asks for historical state (e.g. *"I liked yesterday afternoon's version of the app"* or *"Let's go back to how the landing page looked earlier"*), leverage git history to inspect what changed, pinpoint the relevant commits, and help revert or selectively restore earlier work.
 - **Repository Hygiene:**
-  - Apply standard best practices for `.gitignore` from the start, ensuring dependencies, local environment secrets, and build artifacts never pollute the repository.
+  - Apply standard best practices for `.gitignore` from the start, ensuring dependencies, local environment secrets, workspace configuration (`.tech-cofounder/`), and build artifacts never pollute the repository.

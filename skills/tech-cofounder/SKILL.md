@@ -15,7 +15,7 @@ The `tc` CLI provides command-line access to the **tech-cofounder** hosting plat
 
 Before executing platform commands:
 1. Verify `tc` is available on your PATH: `command -v tc`.
-2. Inspect the currently installed version (for installer-managed binaries, check `readlink "$(command -v tc)"` or run `tc --help`).
+2. Inspect the currently installed version: run `tc --version` (or `tc -v`).
 3. If `tc` is not installed or when new capabilities are added, update to the latest release using the official installer:
    ```bash
    curl -fsSL https://raw.githubusercontent.com/RuoxiQin/tech-cofounder-cli/main/install.sh | bash
@@ -45,6 +45,12 @@ If unauthenticated:
    ```bash
    tc login --token "<USER_PROVIDED_TOKEN>"
    ```
+   *(By default, credentials are saved to workspace configuration at `./.tech-cofounder/config.json`. To target global user credentials in `~/.config/tech-cofounder/config.json`, pass `--global`).*
+
+### Credential Resolution & Hygiene
+- **Workspace Discovery:** `tc` searches up the directory tree to the repository root for `./.tech-cofounder/config.json`. If no workspace configuration is found, it falls back to the global user configuration (`~/.config/tech-cofounder/config.json`).
+- **Global Targeting:** Use the `--global` flag with `tc login` or `tc logout` to explicitly target global credentials instead of the workspace.
+- **Git Hygiene:** Always include `.tech-cofounder/` in the project's `.gitignore` to prevent committing API tokens or workspace configurations.
 
 ---
 
@@ -117,7 +123,7 @@ When starting or onboarding a new project:
 3. **Initialize Git and Push Code:**
    Inside the project directory:
    ```bash
-   # Ensure .gitignore exists and is populated
+   # Ensure .gitignore exists and ignores dependencies, env files, and .tech-cofounder/
    git init -b main
    git add .
    git commit -m "feat: initial project scaffolding"
