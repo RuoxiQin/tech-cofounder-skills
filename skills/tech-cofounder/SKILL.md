@@ -59,7 +59,7 @@ If unauthenticated:
 The `tc` CLI is self-documenting and provides built-in usage instructions:
 
 - **Discover commands and syntax:** Run `tc --help` or `tc <subcommand> --help` (e.g. `tc apps --help`, `tc apps create --help`) to inspect available subcommands, options, and arguments.
-- **Always use `--json`:** Append `--json` to commands (e.g. `tc whoami --json`, `tc apps list --json`, `tc apps create "Name" --json`) to receive structured, machine-readable JSON output.
+- **Always use `--json`:** Append `--json` to commands (e.g. `tc whoami --json`, `tc apps list --json`, `tc apps create my-app --json`) to receive structured, machine-readable JSON output.
 - **Actionable Remediation:** If a command fails or arguments are invalid, `tc` outputs a structured error envelope to `stderr` with a `remediation` field detailing how to fix the issue.
 
 ---
@@ -72,7 +72,7 @@ When starting or onboarding a new project:
 
 1. **Create the App:**
    ```bash
-   tc apps create "My Web App" --json
+   tc apps create my-web-app --name "My Web App" --json
    ```
    *(Note: This automatically provisions a dedicated **private GitHub repository** under the platform organization. The code remains private and secure by default).*
    
@@ -96,9 +96,9 @@ When starting or onboarding a new project:
    Choose the retry based on the problem:
 
    - **Initial creation:** provisions all required resources.
-   - **Resume:** repeat `tc apps create "My Web App" --json` to retry failed or
+   - **Resume:** repeat `tc apps create my-web-app --json` to retry failed or
      unfinished steps while skipping checkpoints already marked `succeeded`.
-   - **Hard repair:** use `tc apps create "My Web App" --fix --json` to recheck
+   - **Hard repair:** use `tc apps create my-web-app --fix --json` to recheck
      every step, including previously succeeded operations. This repairs the
      existing project and repository without changing their identities.
 
