@@ -19,6 +19,8 @@ Comprehensive technical guide for agents to interact with the platform via the `
 - Safe deletion procedures with explicit confirmation
 - Repository manifest, recommended `web_app/` layout, Terraform validation, and
   deployment of a bundled backend/frontend to one Cloud Run service
+- CLI v0.1.13 Terraform supporting files, Firebase registration/Auth, Firestore
+  rules and TTL, App Check configuration, and live verification
 
 ---
 
