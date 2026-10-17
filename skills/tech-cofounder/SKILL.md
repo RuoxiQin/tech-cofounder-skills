@@ -99,7 +99,7 @@ When starting or onboarding a new project:
      strictly creates a new app. If the app ID already exists, it errors out with a 409 conflict.
    - **Repair non-ready steps:** use `tc apps create my-web-app --fix --json` to retry
      failed or unfinished steps for an existing app while skipping checkpoints already marked `succeeded`.
-   - **Hard repair:** use `tc apps create my-web-app --hard_fix --json` (or `--hard-fix`) to rerun
+   - **Hard repair:** use `tc apps create my-web-app --hard-fix --json` to rerun
      all initial setup steps for an existing app, including previously succeeded operations.
      This rechecks and repairs the existing project and repository without changing their identities.
 
