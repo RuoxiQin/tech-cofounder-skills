@@ -93,17 +93,18 @@ When starting or onboarding a new project:
    not completed. These checkpoints are not a heartbeat or run history and cannot
    reliably distinguish a running job from one that died.
 
-   Choose the retry based on the problem:
+   Choose the command based on the goal:
 
-   - **Initial creation:** provisions all required resources.
-   - **Resume:** repeat `tc apps create my-web-app --json` to retry failed or
-     unfinished steps while skipping checkpoints already marked `succeeded`.
-   - **Hard repair:** use `tc apps create my-web-app --fix --json` to recheck
-     every step, including previously succeeded operations. This repairs the
-     existing project and repository without changing their identities.
+   - **Initial creation:** `tc apps create my-web-app --name "My Web App" --json`
+     strictly creates a new app. If the app ID already exists, it errors out with a 409 conflict.
+   - **Repair non-ready steps:** use `tc apps create my-web-app --fix --json` to retry
+     failed or unfinished steps for an existing app while skipping checkpoints already marked `succeeded`.
+   - **Hard repair:** use `tc apps create my-web-app --hard_fix --json` (or `--hard-fix`) to rerun
+     all initial setup steps for an existing app, including previously succeeded operations.
+     This rechecks and repairs the existing project and repository without changing their identities.
 
    A CLI timeout does not stop the worker. Inspect the app before retrying;
-   avoid blindly looping creation or `--fix` while a job may still be running.
+   avoid blindly looping creation or repair flags while a job may still be running.
    Do not delete and recreate an app to recover interrupted provisioning.
 
 2. **Retrieve Scoped GitHub Credentials:**
