@@ -392,6 +392,12 @@ client Terraform must not manage project creation, API enablement, or project IA
   web app may need propagation time: inspect a token-exchange error, then explicitly
   retry after propagation rather than weakening enforcement or looping indefinitely.
 
+For **iOS Firebase apps**, read [Firebase iOS registration and App Check](references/firebase-ios.md).
+It covers `google_firebase_apple_app`, development with the debug provider before
+Apple Team setup, out-of-Terraform debug-token registration/revocation using
+`tc apps gcp-credentials`, and later `google_firebase_app_check_app_attest_config`.
+Keep the existing web App Check configuration and service enforcement intact.
+
 ### Journey 2: Handling Token Expiration (1-Hour Lifespan)
 
 GitHub installation tokens issued by the platform are short-lived and expire after **1 hour** (`expires_at`).
@@ -420,7 +426,7 @@ When an agent pushes code and receives a Git authentication error (e.g. `HTTP 40
 
 ### Journey 4: GCP Debugging & Secret Management
 
-When debugging Cloud Run services, viewing Cloud Build logs, inspecting Firestore/GCS data, or managing application secrets:
+When debugging Cloud Run services, viewing Cloud Build logs, inspecting Firestore/GCS data, or managing application secrets or App Check debug tokens:
 
 1. **Retrieve Scoped GCP Credentials:**
    ```bash
@@ -477,5 +483,10 @@ When debugging Cloud Run services, viewing Cloud Build logs, inspecting Firestor
      # Read secret payload
      gcloud secrets versions access latest --secret API_KEY
      ```
+   - **App Check Debug Tokens:** The project-local `tcAppCheckDebugTokenManager`
+     role grants only `firebaseappcheck.debugTokens.get` and `.update`. Register,
+     inspect, rename, and revoke debug tokens through the App Check API using the
+     same operator credential; see the [iOS workflow](references/firebase-ios.md).
+     Token values stay outside Terraform and cannot be retrieved after registration.
    *(Note: The token expires in 1 hour; call `tc apps gcp-credentials` again if you receive an authentication error).*
 

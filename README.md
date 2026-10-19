@@ -21,6 +21,8 @@ Comprehensive technical guide for agents to interact with the platform via the `
   deployment of a bundled backend/frontend to one Cloud Run service
 - CLI v0.1.13 Terraform supporting files, Firebase registration/Auth, Firestore
   rules and TTL, App Check configuration, and live verification
+- [Firebase iOS workflow](skills/tech-cofounder/references/firebase-ios.md): Apple
+  registration, debug-token management with scoped credentials, and App Attest
 
 ---
 
