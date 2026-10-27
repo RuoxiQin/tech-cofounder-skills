@@ -301,8 +301,13 @@ tc deploy my-web-app "$(git rev-parse HEAD)" --json
 tc apps get my-web-app --json
 ```
 
-Deployment polls for up to twenty minutes. If the CLI times out, inspect the run
-status before retrying; the worker may still be active. A successful deployment
+With CLI v0.1.15 or later, validation and deployment wait for up to 65 minutes
+(older versions stop after 20); a deploy that builds Firestore indexes commonly
+takes 15–20. Many agent shells stop commands sooner, so run `tc deploy` in the
+background or with a command timeout of at least 65 minutes, and wait for it to
+exit. If the command is cut off, the worker keeps running: do not start another
+deploy (it is refused while one runs), and check the app's `url` with
+`tc apps get` before retrying. A successful deployment
 populates the app's `url`. Use a public `/health` route for HTTP checks; Cloud Run's
 internal `/healthz` startup probe can behave differently through Google Frontend.
 Ensure you are running the latest CLI version as described in §1.
