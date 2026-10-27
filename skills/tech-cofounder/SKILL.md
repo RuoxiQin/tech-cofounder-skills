@@ -293,21 +293,29 @@ Supported resources:
 
 Validate and deploy:
 ```bash
-# Validate Terraform policy
+# Start a Terraform policy validation; prints the run with its validation_id
 tc validate my-web-app --json
+# Check it until status is "succeeded" or "failed"
+tc validations get my-web-app <validation_id> --json
 
-# Deploy the exact pushed commit
+# Start a deploy of the exact pushed commit; prints the run with its deploy_id
 tc deploy my-web-app "$(git rev-parse HEAD)" --json
-tc apps get my-web-app --json
+# Check it until status is "succeeded" or "failed"
+tc deploys get my-web-app <deploy_id> --json
 ```
 
-With CLI v0.1.15 or later, validation and deployment wait for up to 65 minutes
-(older versions stop after 20); a deploy that builds Firestore indexes commonly
-takes 15–20. Many agent shells stop commands sooner, so run `tc deploy` in the
-background or with a command timeout of at least 65 minutes, and wait for it to
-exit. If the command is cut off, the worker keeps running: do not start another
-deploy (it is refused while one runs), and check the app's `url` with
-`tc apps get` before retrying. A successful deployment
+With CLI v0.1.16 or later, `tc validate` and `tc deploy` return as soon as the run
+is accepted, normally with status `pending`; they do not wait. Record the
+`validation_id` or `deploy_id`, then run the matching `get` command about once a
+minute until `status` is `succeeded` or `failed`. A deploy that builds Firestore
+indexes commonly takes 15–20 minutes. `get` exits 0 while the run is `pending` or
+`running`, and with the usual failure code once it has failed; read `violations`
+and `execution_error` for the reason. Do not start another deploy while one is
+unfinished (it is refused while one runs). If a `get` command fails, run it again;
+the run keeps going on the platform. Older CLIs wait inside `tc deploy` for up to
+65 minutes instead, so upgrade as described in §1.
+
+A successful deployment
 populates the app's `url`. Use a public `/health` route for HTTP checks; Cloud Run's
 internal `/healthz` startup probe can behave differently through Google Frontend.
 Ensure you are running the latest CLI version as described in §1.
