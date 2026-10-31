@@ -290,6 +290,9 @@ Supported resources:
   - Allowed roles: `roles/secretmanager.secretAccessor`, `roles/secretmanager.viewer`.
   - Member: `serviceAccount:${var.tc_runtime_service_account}`.
   - Secret values are seeded out-of-band by the platform (do not define `google_secret_manager_secret_version` in Terraform).
+- `google_cloud_run_domain_mapping` (optional): serves the app on a domain the user
+  owns. The user must first add the app's deployer as a Search Console owner; read
+  [Custom domains](references/custom-domain.md) before adding one.
 
 Validate and deploy:
 ```bash

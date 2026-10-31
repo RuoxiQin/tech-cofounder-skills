@@ -23,6 +23,8 @@ Comprehensive technical guide for agents to interact with the platform via the `
   rules and TTL, App Check configuration, and live verification
 - [Firebase iOS workflow](skills/tech-cofounder/references/firebase-ios.md): Apple
   registration, debug-token management with scoped credentials, and App Attest
+- [Custom domains](skills/tech-cofounder/references/custom-domain.md): Search Console
+  owner setup for the app's deployer, Cloud Run domain mapping, and DNS records
 
 ---
 
