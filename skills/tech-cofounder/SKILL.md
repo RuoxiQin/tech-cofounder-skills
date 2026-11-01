@@ -1,6 +1,6 @@
 ---
 name: tech-cofounder
-description: Guide for LLM coding agents to interact with the tech-cofounder platform via the `tc` CLI. Use this skill to install the CLI, authenticate users, create applications, retrieve scoped GitHub repository tokens, push commits, refresh tokens, and manage application lifecycle safely.
+description: tech-cofounder is an agent-friendly app platform. Through the `tc` CLI, a coding agent can give an app a private GitHub repository and a cloud project, then deploy a web app or a mobile app's backend (Cloud Run, Firestore, Firebase Auth, Cloud Storage, Secret Manager), host static pages such as privacy and support pages, and attach custom domains, all without the user registering for GitHub, Google Cloud, or other services. Use this skill to install and authenticate `tc`, create apps, get scoped repository tokens, push code, validate and deploy, and manage the app lifecycle safely.
 ---
 
 # Tech-Cofounder Platform Skill

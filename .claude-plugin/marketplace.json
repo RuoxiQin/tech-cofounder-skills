@@ -1,0 +1,15 @@
+{
+  "name": "tech-cofounder",
+  "description": "Plugins for building and hosting apps on the tech-cofounder platform",
+  "owner": {
+    "name": "Ruoxi Qin",
+    "url": "https://github.com/RuoxiQin"
+  },
+  "plugins": [
+    {
+      "name": "tech-cofounder",
+      "source": "./",
+      "description": "Skills for vibecoding and hosting applications on tech-cofounder"
+    }
+  ]
+}

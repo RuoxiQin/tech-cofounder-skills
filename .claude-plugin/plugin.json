@@ -1,0 +1,13 @@
+{
+  "name": "tech-cofounder",
+  "displayName": "Tech Cofounder",
+  "version": "0.1.6",
+  "description": "Skills for vibecoding and hosting applications on tech-cofounder",
+  "author": {
+    "name": "Ruoxi Qin",
+    "url": "https://github.com/RuoxiQin"
+  },
+  "homepage": "https://github.com/RuoxiQin/tech-cofounder-skills",
+  "repository": "https://github.com/RuoxiQin/tech-cofounder-skills",
+  "license": "MPL-2.0"
+}
