@@ -1,9 +1,20 @@
 {
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
   "name": "tech-cofounder",
-  "version": "0.1.6",
-  "description": "Skills for vibecoding and hosting applications on tech-cofounder",
-  "skills": [
-    "skills/vibecoding",
-    "skills/tech-cofounder"
+  "displayName": "Tech Cofounder",
+  "version": "0.1.7",
+  "description": "Build web and mobile apps with a coding agent and host them on tech-cofounder, without the user signing up for GitHub or cloud accounts.",
+  "author": {
+    "name": "Ruoxi Qin",
+    "url": "https://github.com/RuoxiQin"
+  },
+  "homepage": "https://github.com/RuoxiQin/tech-cofounder-skills",
+  "repository": "https://github.com/RuoxiQin/tech-cofounder-skills",
+  "license": "MPL-2.0",
+  "keywords": ["vibecoding", "hosting", "deployment", "ios", "firebase", "cloud-run"],
+  "suggestedPrompts": [
+    "Build and host a web app for my idea with tech-cofounder",
+    "Add a backend and user sign-in to my iOS app",
+    "Get my app ready for App Store submission"
   ]
 }

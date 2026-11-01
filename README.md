@@ -19,8 +19,9 @@ Comprehensive technical guide for agents to interact with the platform via the `
 - Safe deletion procedures with explicit confirmation
 - Repository manifest, recommended `web_app/` layout, Terraform validation, and
   deployment of a bundled backend/frontend to one Cloud Run service
-- CLI v0.1.13 Terraform supporting files, Firebase registration/Auth, Firestore
-  rules and TTL, App Check configuration, and live verification
+- [Firebase workflow](skills/tech-cofounder/references/firebase.md): CLI v0.1.13
+  Terraform supporting files, Firebase registration/Auth, Firestore rules and TTL,
+  App Check configuration, and live verification
 - [Firebase iOS workflow](skills/tech-cofounder/references/firebase-ios.md): Apple
   registration, debug-token management with scoped credentials, and App Attest
 - [Custom domains](skills/tech-cofounder/references/custom-domain.md): Search Console
@@ -49,6 +50,14 @@ claude plugin install tech-cofounder@tech-cofounder
 ```
 
 Get a newer release with `claude plugin update tech-cofounder@tech-cofounder`.
+
+### Antigravity
+
+Install the `tech-cofounder` plugin from this repository:
+
+```bash
+agy plugin install https://github.com/RuoxiQin/tech-cofounder-skills
+```
 
 ### Other agents
 
