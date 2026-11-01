@@ -1,0 +1,20 @@
+{
+  "name": "tech-cofounder",
+  "interface": {
+    "displayName": "Tech Cofounder"
+  },
+  "plugins": [
+    {
+      "name": "tech-cofounder",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

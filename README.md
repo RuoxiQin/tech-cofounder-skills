@@ -51,6 +51,17 @@ claude plugin install tech-cofounder@tech-cofounder
 
 Get a newer release with `claude plugin update tech-cofounder@tech-cofounder`.
 
+### Codex
+
+Add this repository's marketplace, then install the `tech-cofounder` plugin:
+
+```bash
+codex plugin marketplace add RuoxiQin/tech-cofounder-skills
+codex plugin add tech-cofounder@tech-cofounder
+```
+
+Get a newer release with `codex plugin marketplace upgrade tech-cofounder`.
+
 ### Antigravity
 
 Install the `tech-cofounder` plugin from this repository:

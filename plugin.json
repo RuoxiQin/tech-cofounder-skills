@@ -16,5 +16,22 @@
     "Build and host a web app for my idea with tech-cofounder",
     "Add a backend and user sign-in to my iOS app",
     "Get my app ready for App Store submission"
-  ]
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Tech Cofounder",
+        "shortDescription": "Build and host web and mobile apps",
+        "longDescription": "Guidance for vibecoding web and mobile apps, plus the tc CLI workflow for giving an app a private GitHub repository and a cloud project and deploying it, without the user signing up for GitHub or cloud accounts.",
+        "developerName": "Ruoxi Qin",
+        "category": "Developer Tools",
+        "websiteURL": "https://github.com/RuoxiQin/tech-cofounder-skills",
+        "defaultPrompt": [
+          "Build and host a web app for my idea with tech-cofounder",
+          "Add a backend and user sign-in to my iOS app",
+          "Get my app ready for App Store submission"
+        ]
+      }
+    }
+  }
 }
