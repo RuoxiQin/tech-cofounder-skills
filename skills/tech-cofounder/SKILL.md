@@ -246,6 +246,10 @@ them as supporting files. Reference companions with
 deployment fetches the same names from the exact pushed commit. Missing files or
 invalid declarations fail before submission. Keep secrets out of supporting files.
 
+An optional `static_site` object publishes public pages, such as the privacy
+policy and support URLs app stores require; read
+[Static site](references/static-site.md) before adding one.
+
 All shown base manifest fields are required for schema version 1; unknown fields and
 unsupported versions fail validation. Agent instruction files and symlinks are
 repository recommendations, not deployment prerequisites checked by the platform.
@@ -277,6 +281,8 @@ The platform worker injects these standard variables when evaluating and applyin
 - `tc_app_id`: The immutable application ID.
 - `tc_runtime_service_account`: The runtime service account (`app-runner@<app-project>.iam.gserviceaccount.com`).
 - `tc_image_digest`: The published container image digest from Artifact Registry.
+- `tc_static_site_version_name`: Only when the manifest declares `static_site`; the
+  Firebase Hosting version built from that folder at the deploy commit.
 
 Supported resources:
 - `google_cloud_run_v2_service` (required, exactly 1):
@@ -293,6 +299,9 @@ Supported resources:
 - `google_cloud_run_domain_mapping` (optional): serves the app on a domain the user
   owns. The user must first add the app's deployer as a Search Console owner; read
   [Custom domains](references/custom-domain.md) before adding one.
+- `google_firebase_hosting_site` and `google_firebase_hosting_release` (optional,
+  at most 1 each): host the manifest's `static_site` on `https://<gcp_project>.web.app`;
+  follow [Static site](references/static-site.md).
 
 Validate and deploy:
 ```bash

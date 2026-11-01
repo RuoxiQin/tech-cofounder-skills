@@ -25,6 +25,8 @@ Comprehensive technical guide for agents to interact with the platform via the `
   registration, debug-token management with scoped credentials, and App Attest
 - [Custom domains](skills/tech-cofounder/references/custom-domain.md): Search Console
   owner setup for the app's deployer, Cloud Run domain mapping, and DNS records
+- [Static site](skills/tech-cofounder/references/static-site.md): privacy, support,
+  and account-deletion pages hosted on the app's Firebase Hosting site
 
 ---
 

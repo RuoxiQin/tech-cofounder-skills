@@ -25,11 +25,13 @@ curl -fsSL "${GITHUB_RAW_BASE}/skills/vibecoding/SKILL.md" -o "${TARGET_DIR}/vib
 curl -fsSL "${GITHUB_RAW_BASE}/skills/tech-cofounder/SKILL.md" -o "${TARGET_DIR}/tech-cofounder/SKILL.md"
 curl -fsSL "${GITHUB_RAW_BASE}/skills/tech-cofounder/references/firebase-ios.md" -o "${TARGET_DIR}/tech-cofounder/references/firebase-ios.md"
 curl -fsSL "${GITHUB_RAW_BASE}/skills/tech-cofounder/references/custom-domain.md" -o "${TARGET_DIR}/tech-cofounder/references/custom-domain.md"
+curl -fsSL "${GITHUB_RAW_BASE}/skills/tech-cofounder/references/static-site.md" -o "${TARGET_DIR}/tech-cofounder/references/static-site.md"
 
 log_info "Successfully installed skills:"
 echo " - ${TARGET_DIR}/vibecoding/SKILL.md"
 echo " - ${TARGET_DIR}/tech-cofounder/SKILL.md"
 echo " - ${TARGET_DIR}/tech-cofounder/references/firebase-ios.md"
 echo " - ${TARGET_DIR}/tech-cofounder/references/custom-domain.md"
+echo " - ${TARGET_DIR}/tech-cofounder/references/static-site.md"
 echo ""
 log_info "Installation complete! Your AI coding agent can now use the tech-cofounder skills."
