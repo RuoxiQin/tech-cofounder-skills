@@ -1,6 +1,8 @@
 ---
 name: vibecoding
 description: Battle-tested guidance for vibecoding web and mobile apps with a coding agent. Covers a recommended tech stack, engineering and security practices, App Store and Google Play requirements, and known failure patterns, so apps come out fast, polished, secure, store-compliant, and easy to maintain. Examples use tech-cofounder as the hosting backend, but the practices apply to any backend.
+metadata:
+  version: "0.1.7"
 ---
 
 # Vibecoding Web and Mobile Apps

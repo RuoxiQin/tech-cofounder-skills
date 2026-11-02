@@ -1,6 +1,8 @@
 ---
 name: tech-cofounder
 description: tech-cofounder is an agent-friendly app platform. Through the `tc` CLI, a coding agent can give an app a private GitHub repository and a cloud project, then deploy a web app or a mobile app's backend (Cloud Run, Firestore, Firebase Auth, Cloud Storage, Secret Manager), host static pages such as privacy and support pages, and attach custom domains, all without the user registering for GitHub, Google Cloud, or other services. Use this skill to install and authenticate `tc`, create apps, get scoped repository tokens, push code, validate and deploy, and manage the app lifecycle safely.
+metadata:
+  version: "0.1.7"
 ---
 
 # Tech-Cofounder Platform Skill

@@ -33,6 +33,10 @@ Comprehensive technical guide for agents to interact with the platform via the `
 
 ## Quick Install
 
+Ask your AI coding agent to install the skills, and it can run the command below
+for its own agent:
+> *"Install the skills from https://github.com/RuoxiQin/tech-cofounder-skills."*
+
 ### Claude Code
 
 Install the `tech-cofounder` plugin from this repository's marketplace. Inside a
@@ -72,14 +76,28 @@ agy plugin install https://github.com/RuoxiQin/tech-cofounder-skills
 
 ### Other agents
 
-To install these skills into your current workspace:
+Copy the whole `skills/vibecoding/` and `skills/tech-cofounder/` folders, including
+`references/`, into your agent's skills directory.
+
+### After installing
+
+Start a new agent session so it loads the skills (in Claude Code, `/reload-plugins`
+also works).
+
+---
+
+## Releasing
+
+Plugin and skill versions stay in sync. To release, set the same new version in
+`plugin.json`, `.claude-plugin/plugin.json`, and the `metadata.version` frontmatter
+of each skill, then run the release checks:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/RuoxiQin/tech-cofounder-skills/main/install.sh | bash
+scripts/check-release.sh
 ```
 
-Or ask your AI coding agent:
-> *"Install the skills from https://github.com/RuoxiQin/tech-cofounder-skills into this project."*
+GitHub Actions runs `scripts/check-versions.py` on every push and fails if the
+versions differ.
 
 ---
 
