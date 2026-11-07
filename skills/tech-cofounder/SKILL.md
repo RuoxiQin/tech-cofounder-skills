@@ -1,8 +1,8 @@
 ---
 name: tech-cofounder
-description: tech-cofounder is an agent-friendly app platform. Through the `tc` CLI, a coding agent can give an app a private GitHub repository and a cloud project, then deploy a web app or a mobile app's backend (Cloud Run, Firestore, Firebase Auth, Cloud Storage, Secret Manager), host static pages such as privacy and support pages, and attach custom domains, all without the user registering for GitHub, Google Cloud, or other services. Use this skill to install and authenticate `tc`, create apps, get scoped repository tokens, push code, validate and deploy, and manage the app lifecycle safely.
+description: tech-cofounder is an agent-friendly app platform. Through the `tc` CLI, a coding agent can give an app a private GitHub repository and a cloud project, then deploy a web app or a mobile app's backend (Cloud Run, Firestore, Firebase Auth, Cloud Storage, Secret Manager), host static pages such as privacy and support pages, attach custom domains, and give every app Google Analytics, all without the user registering for GitHub, Google Cloud, or other services. Use this skill to install and authenticate `tc`, create apps, get scoped repository tokens, push code, validate and deploy, and manage the app lifecycle safely.
 metadata:
-  version: "0.1.7"
+  version: "0.1.8"
 ---
 
 # Tech-Cofounder Platform Skill
@@ -347,6 +347,14 @@ It covers `google_firebase_apple_app`, development with the debug provider befor
 Apple Team setup, out-of-Terraform debug-token registration/revocation using
 `tc apps gcp-credentials`, and later `google_firebase_app_check_app_attest_config`.
 Keep the existing web App Check configuration and service enforcement intact.
+
+### Analytics
+
+Every app has its own Google Analytics 4 property; nobody registers an account. Read
+[Analytics with Google Analytics 4](references/analytics.md) before adding
+analytics. It covers finding the Measurement ID with `tc apps get`, adding the tag
+and a `track()` helper, event naming and personal-data rules, granting the user Viewer
+with `tc apps analytics-viewers`, verification, and the privacy policy.
 
 ### Journey 2: Handling Token Expiration (1-Hour Lifespan)
 

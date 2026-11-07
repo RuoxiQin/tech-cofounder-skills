@@ -2,7 +2,7 @@
   "$schema": "https://antigravity.google/schemas/v1/plugin.json",
   "name": "tech-cofounder",
   "displayName": "Tech Cofounder",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Build web and mobile apps with a coding agent and host them on tech-cofounder, without the user signing up for GitHub or cloud accounts.",
   "author": {
     "name": "Ruoxi Qin",
